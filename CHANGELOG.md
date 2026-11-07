@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- Add a three-square extension icon inspired by the wxWidgets logo.
+
 ## 0.3.0
 
 - Detect host compilers, CMake, build tools, and debuggers on Windows, Linux, and macOS.

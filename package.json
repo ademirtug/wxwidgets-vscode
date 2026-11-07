@@ -2,7 +2,7 @@
   "name": "wxwidgets-tools",
   "displayName": "wxWidgets Tools",
   "description": "Create portable wxWidgets C++ projects and build, run, or debug with native tools on Windows, Linux, and macOS.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "wx-core-local",
   "license": "UNLICENSED",
   "engines": {
@@ -213,5 +213,6 @@
   "homepage": "https://github.com/ademirtug/wxwidgets-vscode#readme",
   "bugs": {
     "url": "https://github.com/ademirtug/wxwidgets-vscode/issues"
-  }
+  },
+  "icon": "assets/icon.png"
 }
