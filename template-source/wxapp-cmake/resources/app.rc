@@ -1,0 +1,2 @@
+// Windows icon resource used by wxICON(app).
+app ICON "app.ico"

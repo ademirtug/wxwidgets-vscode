@@ -1,0 +1,15 @@
+.vscode/**
+.github/**
+.test-work/**
+test/**
+scripts/**
+dist/**
+DEVELOPMENT.md
+.wxroot
+package-lock.json
+node_modules/**
+!node_modules/jsonc-parser/**
+!node_modules/jsonc-parser/lib/**
+!node_modules/jsonc-parser/lib/umd/**
+
+template-source/**

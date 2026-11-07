@@ -1,0 +1,217 @@
+{
+  "name": "wxwidgets-tools",
+  "displayName": "wxWidgets Tools",
+  "description": "Create portable wxWidgets C++ projects and build, run, or debug with native tools on Windows, Linux, and macOS.",
+  "version": "0.3.0",
+  "publisher": "wx-core-local",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Other"
+  ],
+  "keywords": [
+    "wxWidgets",
+    "wxapp",
+    "C++",
+    "CMake",
+    "MSVC"
+  ],
+  "main": "./src/extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "workspaceContains:.wxwidgets.json",
+    "workspaceContains:.wxroot",
+    "workspaceContains:.wxroot.linux",
+    "workspaceContains:.wxroot.darwin",
+    "onTaskType:wxwidgets",
+    "onDebugResolve:cppvsdbg",
+    "onDebugResolve:cppdbg",
+    "onDebugResolve:wxwidgets-lldb"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "wxWidgets commands build and launch workspace code."
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
+  },
+  "extensionDependencies": [
+    "ms-vscode.cpptools"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "wxwidgets.showStatus",
+        "title": "Show Status",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.newProject",
+        "title": "New Project...",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.configureProject",
+        "title": "Set Up Current Project",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.locateSdk",
+        "title": "Locate SDK...",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.buildDebug",
+        "title": "Build Debug",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.buildRelease",
+        "title": "Build Release",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.run",
+        "title": "Run Without Debugging",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.debug",
+        "title": "Debug (F5)",
+        "category": "wxWidgets"
+      },
+      {
+        "command": "wxwidgets.selectConfiguration",
+        "title": "Select Build Configuration...",
+        "category": "wxWidgets"
+      }
+    ],
+    "configuration": {
+      "title": "wxWidgets",
+      "properties": {
+        "wxwidgets.sdkPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "description": "wxWidgets SDK location. On Windows, choose compiled MSVC x64 libraries. On Linux/macOS, choose an installation containing wx-config. A project SDK selection takes precedence."
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "wxwidgets",
+        "required": [
+          "configuration"
+        ],
+        "properties": {
+          "configuration": {
+            "type": "string",
+            "enum": [
+              "Debug",
+              "Release"
+            ]
+          }
+        }
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "wxwidgets.buildDebug",
+          "when": "wxwidgets.project"
+        },
+        {
+          "command": "wxwidgets.buildRelease",
+          "when": "wxwidgets.project"
+        },
+        {
+          "command": "wxwidgets.run",
+          "when": "wxwidgets.project"
+        },
+        {
+          "command": "wxwidgets.debug",
+          "when": "wxwidgets.project"
+        },
+        {
+          "command": "wxwidgets.selectConfiguration",
+          "when": "wxwidgets.project"
+        }
+      ]
+    },
+    "debuggers": [
+      {
+        "type": "wxwidgets-lldb",
+        "label": "wxWidgets (LLDB)",
+        "languages": [
+          "cpp",
+          "c"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Path to the executable."
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Working directory."
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "default": false
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "when": "workspacePlatform != windows"
+      }
+    ]
+  },
+  "scripts": {
+    "prepare-template": "node scripts/prepare-template.js",
+    "test": "npm run prepare-template && node --test test/core.test.js test/build.test.js test/platform.test.js",
+    "package": "npm run prepare-template && vsce package --allow-missing-repository --out dist/wxwidgets-tools.vsix",
+    "vscode:prepublish": "node scripts/prepare-template.js",
+    "test:host": "node scripts/test-host.js",
+    "test:native": "node scripts/test-native.js"
+  },
+  "dependencies": {
+    "jsonc-parser": "3.3.1"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "4.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ademirtug/wxwidgets-vscode.git"
+  },
+  "homepage": "https://github.com/ademirtug/wxwidgets-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/ademirtug/wxwidgets-vscode/issues"
+  }
+}
