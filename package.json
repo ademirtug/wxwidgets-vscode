@@ -1,8 +1,8 @@
 {
   "name": "wxwidgets-tools",
   "displayName": "wxWidgets Tools",
-  "description": "Create portable wxWidgets C++ projects and build, run, or debug with native tools on Windows, Linux, and macOS.",
-  "version": "0.3.1",
+  "description": "wxWidgets Support",
+  "version": "0.3.2",
   "publisher": "wx-core-local",
   "license": "UNLICENSED",
   "engines": {
