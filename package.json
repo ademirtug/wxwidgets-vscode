@@ -3,7 +3,7 @@
   "displayName": "wxWidgets Tools",
   "description": "wxWidgets Support",
   "version": "0.3.2",
-  "publisher": "wx-core-local",
+  "publisher": "leximo",
   "license": "UNLICENSED",
   "engines": {
     "vscode": "^1.95.0"
