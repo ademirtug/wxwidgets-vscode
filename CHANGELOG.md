@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.3
+
+- Simplify the extension page with installation, documentation, and issue reporting links.
+- Move detailed setup and usage instructions to a separate user guide.
+
+## 0.3.2
+
+- Shorten the extension description to wxWidgets Support.
+
 ## 0.3.1
 
 - Add a three-square extension icon inspired by the wxWidgets logo.

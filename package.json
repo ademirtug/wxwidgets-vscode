@@ -2,7 +2,7 @@
   "name": "wxwidgets-tools",
   "displayName": "wxWidgets Tools",
   "description": "wxWidgets Support",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "publisher": "leximo",
   "license": "UNLICENSED",
   "engines": {
