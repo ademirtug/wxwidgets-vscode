@@ -7,7 +7,7 @@ const { execFile } = require('node:child_process');
 const { promisify } = require('node:util');
 
 async function run() {
-  const extension = vscode.extensions.getExtension('wx-core-local.wxwidgets-tools');
+  const extension = vscode.extensions.getExtension('leximo.wxwidgets-tools');
   assert.ok(extension, 'Local extension must be discoverable');
   const api = await extension.activate();
   assert.ok(extension.isActive, 'Extension must activate');
@@ -59,6 +59,24 @@ async function run() {
   };
   try {
     assert.equal(status.sdk.valid, true, 'Real SDK must be available for integration tests');
+    await vscode.commands.executeCommand('wxwidgets.configureProject', folder.uri);
+    const cpp = JSON.parse(await fs.readFile(path.join(folder.uri.fsPath, '.vscode/c_cpp_properties.json'), 'utf8'));
+    assert.ok(cpp.configurations[0].compilerPath, 'The native MSVC compiler must be configured');
+    const document = await vscode.workspace.openTextDocument(path.join(folder.uri.fsPath, 'main.cpp'));
+    await vscode.window.showTextDocument(document);
+    const position = document.positionAt(document.getText().indexOf('wxFrame'));
+    let definitions = [];
+    for (let attempt = 0; attempt < 60; attempt++) {
+      definitions = await vscode.commands.executeCommand('vscode.executeDefinitionProvider', document.uri, position) || [];
+      if (definitions.some(item => /[\\/]include[\\/]wx[\\/]/i.test((item.uri || item.targetUri).fsPath))) break;
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    assert.ok(definitions.some(item => /[\\/]include[\\/]wx[\\/]/i.test((item.uri || item.targetUri).fsPath)),
+      'C/C++ must resolve wxFrame to a wxWidgets header before the first build');
+    const missingIncludes = vscode.languages.getDiagnostics(document.uri).filter(item =>
+      item.severity === vscode.DiagnosticSeverity.Error && /cannot open source|include.*errors/i.test(item.message));
+    assert.deepEqual(missingIncludes, [], 'wxWidgets headers must resolve without include diagnostics');
+    await record('C/C++ resolves wxWidgets header definitions before the first build');
     const tasks = await vscode.tasks.fetchTasks({ type: 'wxwidgets' });
     assert.ok(tasks.some(t => t.definition.configuration === 'Debug'));
     assert.ok(tasks.some(t => t.definition.configuration === 'Release'));

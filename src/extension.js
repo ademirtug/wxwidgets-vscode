@@ -6,6 +6,7 @@ const path = require('node:path');
 const core = require('./core');
 const { BuildTerminal } = require('./build');
 const { detectCapabilities } = require('./platform');
+const { configureIntelliSense } = require('./intellisense');
 
 function activate(context) {
   const output = vscode.window.createOutputChannel('wxWidgets Tools');
@@ -63,7 +64,7 @@ function activate(context) {
       vscode.workspace.getConfiguration('wxwidgets', folder?.uri).get('sdkPath', ''),
       context.globalState.get(`lastSdkPath:${process.platform}`, process.platform === 'win32' ? context.globalState.get('lastSdkPath', '') : ''), process.env, configuration);
   }
-  async function saveSdk(folder, sdk) {
+  async function saveSdk(folder, sdk, configuration) {
     trusted();
     if (folder) {
       const file = path.join(folder.uri.fsPath, core.sdkFileName());
@@ -72,6 +73,10 @@ function activate(context) {
       if (previous !== sdk.root) await fs.writeFile(file, sdk.root + '\n');
     }
     await context.globalState.update(`lastSdkPath:${process.platform}`, sdk.root);
+    if (folder && await core.isProject(folder.uri.fsPath)) {
+      try { await configureIntelliSense(folder.uri.fsPath, sdk, await capabilities(), configuration || selected(folder)); }
+      catch (error) { output.appendLine(`Could not configure C/C++ IntelliSense: ${error.message}`); }
+    }
   }
   async function pickSdk(folder, configuration) {
     trusted();
@@ -81,7 +86,7 @@ function activate(context) {
         title: `Select wxWidgets SDK${configuration ? ` for ${configuration}` : ''}` });
       if (!selectedPaths?.length) return;
       const sdk = await core.inspectSdk(selectedPaths[0].fsPath, configuration);
-      if (sdk.valid) { await saveSdk(folder, sdk); return sdk; }
+      if (sdk.valid) { await saveSdk(folder, sdk, configuration); return sdk; }
       const retry = await vscode.window.showWarningMessage(sdk.reason, 'Choose Another Folder...');
       if (!retry) return;
     }
@@ -89,7 +94,7 @@ function activate(context) {
   async function ensureSdk(folder, configuration, automatic = false) {
     trusted();
     const sdk = await detectSdk(folder, configuration);
-    if (sdk.valid) { await saveSdk(folder, sdk); return sdk; }
+    if (sdk.valid) { await saveSdk(folder, sdk, configuration); return sdk; }
     const id = `${folder ? key(folder) : 'global'}:${configuration || ''}`;
     const noticeKey = `${id}:${sdk.reason}`;
     if (notifications.has(id)) return notifications.get(id);
@@ -244,7 +249,7 @@ function activate(context) {
     if (!folder) return;
     await core.configureProject(folder.uri.fsPath, await capabilities());
     await ensureSdk(folder, selected(folder));
-    void vscode.window.showInformationMessage('wxWidgets Debug/Release build tasks and launch configurations are ready.');
+    void vscode.window.showInformationMessage('wxWidgets build, debug, and C/C++ editor settings are ready.');
     await refresh();
     return true;
   }

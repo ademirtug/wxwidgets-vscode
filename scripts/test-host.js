@@ -26,6 +26,7 @@ async function main() {
   const child = spawn(executable, ['--new-window', `--extensionDevelopmentPath=${root}`,
     `--extensionTestsPath=${path.join(root, 'test', 'host.test.js')}`,
     `--user-data-dir=${path.join(work, 'integration-profile')}`, '--disable-workspace-trust',
+    '--disable-extension=wx-core-local.wxwidgets-tools',
     '--skip-welcome', '--skip-release-notes', fixture], { windowsHide: true, stdio: 'ignore' });
   let launchError;
   child.once('error', error => { launchError = error; });

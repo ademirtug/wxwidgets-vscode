@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4
+
+- Configure C/C++ IntelliSense automatically when a project SDK is found or selected.
+- Include wxWidgets headers, configuration headers, compiler paths, and platform definitions.
+- Refresh editor settings when switching SDKs or build configurations, while preserving other C/C++ configurations.
+
 ## 0.3.3
 
 - Simplify the extension page with installation, documentation, and issue reporting links.

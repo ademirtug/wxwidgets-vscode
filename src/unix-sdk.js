@@ -42,7 +42,7 @@ async function inspectUnixSdk(location, configuration, options = {}) {
         throw new Error(`The compiled wxWidgets library ${library} was not found. Install the development libraries for this system.`);
     }
     for (const library of absolute) if (!await fileExists(library)) throw new Error(`The compiled library ${library} is missing.`);
-    return { valid: true, root: path.resolve(location), configExecutable, version, prefix,
+    return { valid: true, root: path.resolve(location), configExecutable, version, prefix, cxxflags: splitFlags(cxxflags),
       libraryDirectory: dirs[0], configuration, platform };
   } catch (error) {
     return { valid: false, reason: `This wxWidgets installation is not ready: ${error.message}` };

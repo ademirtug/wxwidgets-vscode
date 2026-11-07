@@ -51,3 +51,9 @@ Install native tools and wxWidgets separately. A graphical desktop session is ne
 Use **wxWidgets: Show Status** to check detected capabilities. **wxWidgets: Locate SDK...** selects another installation; `wxwidgets.sdkPath` is also available in Settings. On Unix systems, an installation containing `wx-config` or `bin/wx-config` is expected.
 
 SDK selections stay local to each platform. Build the same source project separately on each OS; creating a project does not cross-compile binaries for other platforms. macOS projects produce an application bundle.
+
+## C++ editor support
+
+When a project SDK is found or selected, the extension configures Microsoft C/C++ IntelliSense with the wxWidgets headers, generated `wx/setup.h`, compiler, and platform definitions. This also applies to existing generated projects when opened with the extension installed.
+
+The extension maintains the **wxWidgets** configuration in `.vscode/c_cpp_properties.json`. Other configurations and comments are preserved. If you already have C/C++ configurations, use **C/C++: Select a Configuration...** to choose **wxWidgets**. Keep custom include paths and definitions in your own configuration; the extension refreshes its managed fields when SDKs or build configurations change.

@@ -2,7 +2,7 @@
   "name": "wxwidgets-tools",
   "displayName": "wxWidgets Tools",
   "description": "wxWidgets Support",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "publisher": "leximo",
   "license": "UNLICENSED",
   "engines": {
@@ -194,7 +194,7 @@
   },
   "scripts": {
     "prepare-template": "node scripts/prepare-template.js",
-    "test": "npm run prepare-template && node --test test/core.test.js test/build.test.js test/platform.test.js",
+    "test": "npm run prepare-template && node --test test/core.test.js test/build.test.js test/platform.test.js test/intellisense.test.js",
     "package": "npm run prepare-template && vsce package --allow-missing-repository --out dist/wxwidgets-tools.vsix",
     "vscode:prepublish": "node scripts/prepare-template.js",
     "test:host": "node scripts/test-host.js",

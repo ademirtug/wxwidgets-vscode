@@ -68,6 +68,14 @@ async function detectCapabilities(options = {}) {
       }
     }
     result.vsDevCmd = installation && path.join(installation, 'Common7', 'Tools', 'VsDevCmd.bat');
+    if (installation) {
+      try {
+        const version = (await fs.readFile(path.join(installation, 'VC', 'Auxiliary', 'Build',
+          'Microsoft.VCToolsVersion.default.txt'), 'utf8')).trim();
+        if (/^\d+(?:\.\d+)+$/.test(version)) result.compilerPath = await find(path.join(installation,
+          'VC', 'Tools', 'MSVC', version, 'bin', 'Hostx64', 'x64', 'cl.exe'));
+      } catch { /* C/C++ can also discover installed MSVC tools itself. */ }
+    }
     const bundled = installation && path.join(installation, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'CMake');
     result.cmake ||= await find(path.join(environment.ProgramFiles || 'C:\\Program Files', 'CMake', 'bin', 'cmake.exe'));
     if (!result.cmake && bundled) result.cmake = await find(path.join(bundled, 'CMake', 'bin', 'cmake.exe'));
